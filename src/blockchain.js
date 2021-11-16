@@ -69,9 +69,6 @@ class Blockchain {
 
             const lastBlock = self.chain[self.chain.length - 1] || { height: -1 };
 
-            if (lastBlock && lastBlock.height !== self.height)
-              throw new Error('height mismatch');
-
             block.previousBlockHash = lastBlock.hash;
             block.height = self.height + 1;
             block.time = Date.now().toString().slice(0, -3);
@@ -198,18 +195,20 @@ class Blockchain {
      */
     validateChain() {
         let self = this;
-        let errorLog = [];
-        const errorBlockHashes = [];
+        let previousBlock;
         return new Promise(async (resolve, reject) => {
-          errorLog = self.chain.filter(b => {
-            if (!b.validate() || errorBlockHashes.includes(b.previousBlockHash)) {
-              errorBlockHashes.push(b.hash);
-              return true;
+          for (let block of self.chain) {
+            const valid = await block.validate();
+
+            if (!valid) reject(`block ${block.hash} is invalid`);
+
+            if (previousBlock && previousBlock.hash !== block.previousBlockHash) {
+              reject(`block ${block.hash} is invalid`);
             }
-            return false;
-          }).map(b => `block ${b.height} is invalid`);
-          if (!errorLog.length) resolve();
-          else reject(errorLog);
+
+            previousBlock = block;
+          }
+          resolve();
         });
     }
 
