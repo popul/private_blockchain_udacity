@@ -1,0 +1,27 @@
+{
+  "name": "private_blockchain",
+  "version": "1.0.0",
+  "description": "This project creates a Blockchain application to store data into the blocks",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha src/**/*.spec.js",
+    "test:watch": "mocha src/**/*.spec.js --watch",
+    "start": "node app.js"
+  },
+  "author": "Udacity - jose.morales@udacity.com",
+  "license": "ISC",
+  "dependencies": {
+    "bitcoinjs-lib": "^4.0.3",
+    "bitcoinjs-message": "^2.0.0",
+    "body-parser": "^1.18.3",
+    "crypto-js": "^3.1.9-1",
+    "express": "^4.16.4",
+    "hex2ascii": "0.0.3",
+    "morgan": "^1.9.1"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^9.1.3",
+    "nyc": "^15.1.0"
+  }
+}
