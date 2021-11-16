@@ -65,7 +65,7 @@ class Blockchain {
         let self = this;
         return new Promise((resolve, reject) => {
           try {
-            self.validateChain();
+            await self.validateChain();
 
             const lastBlock = self.chain[self.chain.length - 1] || { height: -1 };
 
@@ -162,7 +162,7 @@ class Blockchain {
     getBlockByHeight(height) {
         let self = this;
         return new Promise((resolve, reject) => {
-            let block = self.chain.filter(p => p.height === height)[0];
+            let block = self.chain.find(p => p.height === height)[0];
             if(block){
                 resolve(block);
             } else {
@@ -200,15 +200,15 @@ class Blockchain {
           for (let block of self.chain) {
             const valid = await block.validate();
 
-            if (!valid) reject(`block ${block.hash} is invalid`);
+            if (!valid) return reject(`block ${block.hash} is invalid`);
 
             if (previousBlock && previousBlock.hash !== block.previousBlockHash) {
-              reject(`block ${block.hash} is invalid`);
+              return reject(`block ${block.hash} is invalid`);
             }
 
             previousBlock = block;
           }
-          resolve();
+          resolve('chain is valid');
         });
     }
 
